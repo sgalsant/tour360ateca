@@ -10,36 +10,39 @@
     
 
     <a-scene>
-      <a-assets>
-        <img id="point1" src="imagenes/point1.JPG">
-        <img id="point2" src="imagenes/point2.JPG">
-        <img id="point3" src="imagenes/point3.JPG">
-        <img id="point4" src="imagenes/point4.JPG">
-        <img id="point5" src="imagenes/point5.JPG">
-        <img id="point6" src="imagenes/point6.JPG">
-        
+      <a-assets  id="assets">
+        <img id="point1" src="imagenes/point1.JPG">  
+             
       </a-assets>
 
-      <video id="video360" src="video/Video1.mp4" preload="auto" crossorigin="anonymous" playsinline webkit-playsinline visible="false"></video>
-
+    
       <!-- Cámara con cursor para detectar clics -->
       <a-entity camera look-controls 
                 raycaster="objects: .clickable" 
                 cursor="rayOrigin: mouse">
       </a-entity>
 
-      <a-plane id="video-screen"
+      <a-plane id="pantalla1"
          position="1.23 -0.26 -2"
          rotation="0 -25 0"
          width="1.36" height="0.8"
-         material="shader: flat; src: #video360"
+         material="shader: flat;side:double"
          visible="false"
-         class="clickable"
-         play-video-on-click>
+         class="clickable">
       </a-plane>
 
+      <a-plane id="pantalla2"
+      position="-2.55 -0.23 4"
+      rotation="0 -25 -0"
+      width="1.49" height="0.85"
+      material="shader: flat;side:double"
+      visible="true"
+      class="clickable">
+   </a-plane>
+
+
       <!-- Cielo donde se cargan las imágenes 360 -->
-      <a-sky id="sky" src="#point6" rotation="0 -90 0"></a-sky>
+      <a-sky id="sky" src="#point1" rotation="0 -90 0"></a-sky>
 
       <!-- HOTSPOTS -->
       <a-entity id="to-panorama1" geometry="primitive: plane; height: 1.2; width: 1"  material="color: green; opacity: 0; transparent: true; side: double" position="-1 0.1 -3.2">
@@ -67,6 +70,19 @@
     </a-scene>
 
     <script>
+
+      window.addEventListener('load', () => {
+          const assets = document.querySelector('#assets');
+          Array.from({ length: 6 }, (_, i) => i + 1).forEach(i => {
+          if (document.getElementById(`point${i}`) == undefined) {
+            const img = document.createElement('img');
+            img.setAttribute('id', `point${i}`);
+            img.setAttribute('src', `imagenes/point${i}.JPG`);
+            assets.appendChild(img);
+          }
+        });
+      });
+
 
       const hotspots = {
         point1: document.querySelector('#to-panorama1'),
@@ -119,19 +135,39 @@
     }
   });
 }
-      function showVideo(visible) {
-        if (visible) {
-          const screen = document.querySelector('#video-screen');
-          screen.setAttribute('visible', true);
-          screen.classList.add("clickable");
-          document.querySelector('#video360').pause();
-        } else {
-          const screen = document.querySelector('#video-screen');
-          screen.setAttribute('visible', false);
-          screen.classList.remove("clickable");
-          document.querySelector('#video360').pause();
-        }
-      }
+
+function showVideos({ show = [], hide = [] }) {
+  // Mostrar planos y reproducir video
+  show.forEach(id => {
+    const plane = document.getElementById(id);
+    if (!plane) return;
+
+    plane.setAttribute('visible', true);
+    plane.classList.add('clickable');
+
+    const video = videoMap[id];
+   /* if (video) {
+      video.play().catch(err => {
+        console.warn(`No se pudo reproducir el video "${id}":`, err);
+      });
+    }*/
+  });
+
+  // Ocultar planos y pausar video
+  hide.forEach(id => {
+    const plane = document.getElementById(id);
+    if (!plane) return;
+
+    plane.setAttribute('visible', false);
+    plane.classList.remove('clickable');
+
+    const video = videoMap[id];
+    if (video) {
+      video.pause();
+    }
+  });
+}
+
 
       function onChangeScene() {
         const sky = document.querySelector('#sky');
@@ -145,7 +181,9 @@
               { id: 'point3', position: '0 0.1 -2', rotation: '0 0 0' },
               { id: 'point6', position: '3 0 -5', rotation: '0 -20 0', size: [3,2] }
             ]);
-            showVideo(false);
+            showVideos({
+                hide: ['pantalla1', 'pantalla2']
+            });
 
             break;
           case 'point2':
@@ -155,16 +193,20 @@
          //     { id: 'point4', position: '2 0.1 -4' },
               { id: 'point6', position: '17 0 -4',  rotation:'0 -70 0', size:[12,8]  }
             ]);
-            showVideo(false);
-            break;
+            showVideos({
+                hide: ['pantalla1', 'pantalla2']
+            });
+      break;
           case 'point3':
           mostrarHotspots([
-              { id: 'point1', position: '-0.168 0 2' },
-              { id: 'point2', position: '-0.8 -0.4 2' },
+              { id: 'point1', position: '-1.2 -0.8 8', rotation: '0 -30 0', size:[3.2,2.5]  },
+              { id: 'point2', position: '-0.8 -0.8 1.8', rotation: '0 -30 0', size:[1,1]  },
               { id: 'point4', position: '0.6 0 -3', rotation: '0 0 0', size:[3,3] },
               { id: 'point6', position: '9 -0.7 0',rotation: '0 -60 0', size:[5,6] }
             ]);
-            showVideo(false);
+            showVideos({
+                hide: ['pantalla1', 'pantalla2']
+            });
             break;
           case 'point4':
           mostrarHotspots([
@@ -173,7 +215,9 @@
               { id: 'point3', position: '0.6 0 2', rotation: '0 -10 0', size: [1.5, 1] },
               { id: 'point6', position: '15 -2 1.5', rotation: '0 90 0', size: [12, 12] }
             ]);
-            showVideo(true);
+            showVideos({
+                show: ['pantalla1', 'pantalla2']
+            });
 
             break;
           case 'point5':
@@ -186,8 +230,10 @@
               { id: 'point2', position: '2 -0.5 -3.5', rotation: '0 0 0', size: [0.8, 1] },
               { id: 'point3', position: '3 0 -3', rotation: '0 -20 0', size: [1, 2] }
             ]);
-            showVideo(false);
-            break;
+            showVideos({
+                hide: ['pantalla1', 'pantalla2']
+            });
+           break;
           default:
             mostrarHotspots([]);
         }
@@ -197,33 +243,61 @@
       sky.addEventListener('materialtextureloaded', onChangeScene);
 
 
-      AFRAME.registerComponent('play-video-on-click', {
-    init: function () {
-      const videoEl = document.querySelector('#video360');
-      this.el.addEventListener('click', () => {
-        if (!document.querySelector('#video-screen').getAttribute('visible')) return;
-        
-
-        if (videoEl.paused) {
-          videoEl.play();
-        } else {
-          videoEl.pause();
-        }
-      });
-    }
-  });
-
+    
 
   function cambiarOpacidadHotspots(valorOpacidad) {
-  Object.values(hotspots).forEach(el => {
+    Object.values(hotspots).forEach(el => {
     el.setAttribute('material', {
-      opacity: valorOpacidad,
-      transparent: true
+        opacity: valorOpacidad,
+        transparent: true
+      });
     });
-  });
-}
+  }
 
-cambiarOpacidadHotspots(0);
+
+// Datos: planes y sus vídeos
+const videoConfig = [
+  { id: 'pantalla1', src: 'video/Video1.mp4' },
+  { id: 'pantalla2', src: 'video/Video2.mp4' }
+];
+
+// Diccionario para asociar plano → video
+const videoMap = {};
+
+videoConfig.forEach(({ id, src }) => {
+  const video = document.createElement('video');
+  video.id = id;
+  video.src = src;
+  video.crossOrigin = 'anonymous';
+  video.loop = true;
+  video.setAttribute('playsinline', '');
+  video.setAttribute('webkit-playsinline', '');
+  video.autoplay = false; // ⛔ no auto, se controla por clic
+
+  // Guardar el video asociado al plano
+  videoMap[id] = video;
+
+  // Asignar video como textura
+  const plane = document.getElementById(id);
+  plane.setAttribute('material', {
+  shader: 'flat',
+  src: video
+});
+
+  // Evento: clic en el plano → play/pause
+  plane.addEventListener('click', () => {
+    if (!plane.getAttribute('visible')) return;
+
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  });
+});
+
+
+  cambiarOpacidadHotspots(0.5);
     </script>
   </body>
 </html>
