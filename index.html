@@ -12,7 +12,7 @@
     <a-scene>
       <a-assets  id="assets">
         <img id="point1" src="imagenes/point1.JPG">  
-             
+        <img id="iconoPlay" src="imagenes/play.png">  
       </a-assets>
 
     
@@ -21,6 +21,40 @@
                 raycaster="objects: .clickable" 
                 cursor="rayOrigin: mouse">
       </a-entity>
+
+      <a-entity id="bienvenida" visible="true" position="0 1 -2">
+        <!-- Fondo oscuro semitransparente -->
+        <a-plane 
+          width="2" height="1.2"
+          color="#111"
+          opacity="0.8"
+          material="transparent: true"
+          position="0 0 0"
+          animation="property: opacity; from: 0; to: 0.8; dur: 1000; easing: easeOutQuad">
+        </a-plane>
+      
+        <!-- Texto de bienvenida -->
+        <a-text 
+          value="Bienvenidas y bienvenidos al AULA ATECA\nde IES Ana Luisa Benítez\n\nHaz clic en el botón para entrar"
+          align="center"
+          width="2"
+          color="white"
+          position="0 0.3 0"
+          animation="property: opacity; from: 0; to: 1; dur: 1200; delay: 300; easing: easeOutQuad">
+        </a-text>
+      
+        <!-- Botón 3D de Entrar -->
+        <a-entity id="btnEntrar" class="clickable"
+          geometry="primitive: plane; width: 1.5; height: 0.3"
+          material="color: #00cc88; shader: flat; opacity: 0.9"
+          position="0 -0.3 0.01"
+          text="value: entrar; align: center; color: white; width: 2"
+          animation="property: scale; from: 0 0 0; to: 1 1 1; dur: 600; delay: 600; easing: easeOutBack">
+        </a-entity>
+      </a-entity>
+      
+     
+
 
       <a-plane id="pantalla1"
          position="1.23 -0.26 -2"
@@ -98,13 +132,34 @@
         el.addEventListener('click', () => changeScene(key));
       });
 
-  
+      var entrada = false;
+
+      document.querySelector('#btnEntrar').addEventListener('click', () => {
+  const bienvenida = document.querySelector('#bienvenida');
+
+  // Animación de salida
+  bienvenida.setAttribute('animation__fade', {
+    property: 'scale',
+    to: '0 0 0',
+    dur: 500,
+    easing: 'easeInOutCubic'
+  });
+
+  // Desactivar después de animar
+  setTimeout(() => {
+    bienvenida.setAttribute('visible', false);
+    entrada = true;
+  }, 600);
+});
+
 
       function getPanoramaName(src) {
         return src.substring(1); //src.split('/').pop().replace('.JPG', '');
       }
 
       function changeScene(panorama) {
+        if (!entrada) return;
+
         const sky = document.querySelector('#sky');
         sky.setAttribute('src', `#${panorama}`);
       }
@@ -196,6 +251,7 @@ function showVideos({ show = [], hide = [] }) {
             showVideos({
                 hide: ['pantalla1', 'pantalla2']
             });
+            mostrarEspacioMaker({position:"1 0.3 3", rotation:"0 190 10"});
       break;
           case 'point3':
           mostrarHotspots([
@@ -207,6 +263,7 @@ function showVideos({ show = [], hide = [] }) {
             showVideos({
                 hide: ['pantalla1', 'pantalla2']
             });
+            mostrarEspacioMaker({position:"1 0 3", rotation:"0 50 0"});
             break;
           case 'point4':
           mostrarHotspots([
@@ -296,7 +353,44 @@ videoConfig.forEach(({ id, src }) => {
   });
 });
 
+function cargarEntidadDesdeArchivo(url, callback) {
+  fetch(url)
+    .then(response => response.text())
+    .then(html => {
+      const wrapper = document.createElement('div');
+      wrapper.innerHTML = html.trim();
+      const entidad = wrapper.firstElementChild;
+      document.querySelector('a-scene').appendChild(entidad);
+      if (callback) callback(entidad);
+    })
+    .catch(err => console.error(`Error al cargar ${url}:`, err));
+}
 
+function mostrarEspacioMaker({ position, rotation, scale ='1 1 1'} = {}) {
+  return;
+  const panelExistente = document.querySelector('#maker');
+
+if (panelExistente) {
+  // Ya existe: actualizar atributos y mostrarlo
+  panelExistente.setAttribute('position', position);
+  panelExistente.setAttribute('rotation', rotation);
+  panelExistente.setAttribute('scale', scale);
+  panelExistente.setAttribute('visible', true);
+  return;
+}
+
+
+  cargarEntidadDesdeArchivo('escenas/maker.html', (panel) => {
+    panel.setAttribute('position', position);
+    panel.setAttribute('rotation', rotation);
+    panel.setAttribute('rotation', scale);
+
+    const btn = panel.querySelector('#btnPlay');
+    btn.addEventListener('click', () => {
+//      panel.parentNode.removeChild(panel);
+    });
+  });
+}
   cambiarOpacidadHotspots(0);
     </script>
   </body>
