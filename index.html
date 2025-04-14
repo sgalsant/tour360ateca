@@ -22,10 +22,10 @@
                 cursor="rayOrigin: mouse">
       </a-entity>
 
-      <a-entity id="bienvenida" visible="true" position="0 0.8 -2.5" rotation="0 0 0">
+      <a-entity id="bienvenida" visible="true" position="0 0.5 -2" rotation="0 0 0">
         <!-- Fondo oscuro semitransparente -->
         <a-plane 
-          width="1.5" height="0.75"
+          width="1.2" height="0.5"
           color="#111"
           opacity="0.8"
           material="transparent: true"
@@ -46,10 +46,10 @@
       
         <!-- Botón 3D de Entrar -->
         <a-entity id="btnEntrar" class="clickable"
-          geometry="primitive: plane; width:1; height: 0.15"
+          geometry="primitive: plane; width:0.9; height: 0.17"
           material="color: #00cc88; shader: flat; opacity: 0.9"
-          position="0 -0.2 0.01"
-          text="value: entrar; align: center; color: white; width: 2"
+          position="0 -0.1 0.01"
+          text="value: entrar; align: center; color: white; width: 1.5"
           animation="property: scale; from: 0 0 0; to: 1 1 1; dur: 600; delay: 600; easing: easeOutBack">
         </a-entity>
       </a-entity>
