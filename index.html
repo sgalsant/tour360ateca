@@ -22,10 +22,10 @@
                 cursor="rayOrigin: mouse">
       </a-entity>
 
-      <a-entity id="bienvenida" visible="true" position="0 1 -2">
+      <a-entity id="bienvenida" visible="true" position="0.8 0.2 -2" rotation="0 -45 0">
         <!-- Fondo oscuro semitransparente -->
         <a-plane 
-          width="2" height="1.2"
+          width="1.5" height="0.75"
           color="#111"
           opacity="0.8"
           material="transparent: true"
@@ -37,17 +37,18 @@
         <a-text 
           value="Bienvenidas y bienvenidos al AULA ATECA\nde IES Ana Luisa Benítez\n\nHaz clic en el botón para entrar"
           align="center"
-          width="2"
+          font="https://raw.githubusercontent.com/etiennepinchon/aframe-fonts/master/fonts/creepster/Creepster-Regular.json"
+          width="1.5"
           color="white"
-          position="0 0.3 0"
+          position="0 0.1 0"
           animation="property: opacity; from: 0; to: 1; dur: 1200; delay: 300; easing: easeOutQuad">
         </a-text>
       
         <!-- Botón 3D de Entrar -->
         <a-entity id="btnEntrar" class="clickable"
-          geometry="primitive: plane; width: 1.5; height: 0.3"
+          geometry="primitive: plane; width:1; height: 0.15"
           material="color: #00cc88; shader: flat; opacity: 0.9"
-          position="0 -0.3 0.01"
+          position="0 -0.2 0.01"
           text="value: entrar; align: center; color: white; width: 2"
           animation="property: scale; from: 0 0 0; to: 1 1 1; dur: 600; delay: 600; easing: easeOutBack">
         </a-entity>
