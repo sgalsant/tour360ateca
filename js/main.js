@@ -4,7 +4,7 @@ let hotspots = [];
 
 window.addEventListener('load', () => {
     const assets = document.querySelector('#assets');
-    Array.from({ length: 6 }, (_, i) => i + 1).forEach(i => {
+    [6,3,2,4,5].forEach(i => {
         if (document.getElementById(`point${i}`) == undefined) {
             const img = document.createElement('img');
             img.setAttribute('id', `point${i}`);
@@ -32,7 +32,10 @@ Object.entries(hotspots).forEach(([key, el]) => {
         }
     });
 
+    const sky = document.querySelector('#sky');
+    sky.addEventListener('materialtextureloaded', onChangeScene);
     // Inicialización
+   
     mostrarHotspots();
 cambiarOpacidadHotspots(0); 
 });
@@ -188,8 +191,7 @@ function onChangeScene() {
     }
 }
 
-const sky = document.querySelector('#sky');
-sky.addEventListener('materialtextureloaded', onChangeScene);
+
 
 function cambiarOpacidadHotspots(valorOpacidad) {
     Object.values(hotspots).forEach(el => {
