@@ -34,7 +34,7 @@ Object.entries(hotspots).forEach(([key, el]) => {
 
     // Inicialización
     mostrarHotspots();
-cambiarOpacidadHotspots(0.5); 
+cambiarOpacidadHotspots(0); 
 });
 
     document.querySelector("#btnEnter").addEventListener('click', () => {
