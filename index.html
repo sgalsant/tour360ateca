@@ -5,22 +5,38 @@
     <title>Tour 360 básico</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="js/main.js" type="module"></script>
   </head>
   <body>
-    
-
     <a-scene>
       <a-assets  id="assets">
         <img id="point1" src="imagenes/point1.JPG">  
         <img id="iconoPlay" src="imagenes/play.png">  
       </a-assets>
 
-    
       <!-- Cámara con cursor para detectar clics -->
       <a-entity camera look-controls 
                 raycaster="objects: .clickable" 
                 cursor="rayOrigin: mouse">
       </a-entity>
+
+      <a-plane id="pantalla1"
+         position="1.23 -0.26 -2"
+         rotation="0 -25 0"
+         width="1.36" height="0.8"
+         material="shader: flat;side:double"
+         visible="false"
+         class="clickable">
+      </a-plane>
+
+      <a-plane id="pantalla2"
+        position="-2.55 -0.23 4"
+        rotation="0 -25 -0"
+        width="1.49" height="0.85"
+        material="shader: flat;side:double"
+        visible="true"
+        class="clickable">
+      </a-plane>
 
       <a-entity id="bienvenida" visible="true" position="0 0.5 -2" rotation="0 0 0">
         <!-- Fondo oscuro semitransparente -->
@@ -37,7 +53,6 @@
         <a-text 
           value="Visita virtual al AULA ATECA\ndel IES Ana Luisa Benitez"
           align="center"
-
           width="1.5"
           color="white"
           position="0 0.1 0"
@@ -45,354 +60,31 @@
         </a-text>
       
         <!-- Botón 3D de Entrar -->
-        <a-entity id="btnEntrar" class="clickable"
+        <a-entity id="btnEnter" class="clickable"
           geometry="primitive: plane; width:0.9; height: 0.17"
           material="color: #00cc88; shader: flat; opacity: 0.9"
           position="0 -0.1 0.01"
           text="value: entrar; align: center; color: white; width: 1.5"
           animation="property: scale; from: 0 0 0; to: 1 1 1; dur: 600; delay: 600; easing: easeOutBack">
         </a-entity>
-      </a-entity>
-      
-     
-
-
-      <a-plane id="pantalla1"
-         position="1.23 -0.26 -2"
-         rotation="0 -25 0"
-         width="1.36" height="0.8"
-         material="shader: flat;side:double"
-         visible="false"
-         class="clickable">
-      </a-plane>
-
-      <a-plane id="pantalla2"
-      position="-2.55 -0.23 4"
-      rotation="0 -25 -0"
-      width="1.49" height="0.85"
-      material="shader: flat;side:double"
-      visible="true"
-      class="clickable">
-   </a-plane>
-
+      </a-entity> <!-- End Bienvenida -->
 
       <!-- Cielo donde se cargan las imágenes 360 -->
       <a-sky id="sky" src="#point1" rotation="0 -90 0"></a-sky>
 
       <!-- HOTSPOTS -->
       <a-entity id="to-panorama1" geometry="primitive: plane; height: 1.2; width: 1"  material="color: green; opacity: 0; transparent: true; side: double" position="-1 0.1 -3.2">
-              
       </a-entity>
       <a-entity id="to-panorama2" geometry="primitive: plane; height: 3; width: 1.05"   material="color: yellow; opacity: 0; transparent: true; side: double" position="-1 0.1 -3.2">
-        
       </a-entity>
-
       <a-entity id="to-panorama3" geometry="primitive: plane; height: 1.2; width: 0.6"   material="color: orange; opacity: 0; transparent: true; side: double"  position="1.941 -0.5 -2.6" visible="false">
-        
       </a-entity>
-
       <a-entity id="to-panorama4" geometry="primitive: plane; height: 3; width: 3.5"  material="color: pink; opacity: 0; transparent: true; side: double" position="1 -0.5 -2" visible="false">
-        
       </a-entity>
-
       <a-entity id="to-panorama5" geometry="primitive: plane; height: 3; width: 3.5"  material="color: brown; opacity: 0; transparent: true; side: double" position="3 0 -5" visible="false">
-        
       </a-entity>
-
       <a-entity id="to-panorama6" geometry="primitive: plane; height: 2; width: 4"  material="color: blue; opacity: 0; transparent: true; side: double" position="3 0.08 -5" visible="false">
-        
       </a-entity>
     </a-scene>
-
-    <script>
-
-      window.addEventListener('load', () => {
-          const assets = document.querySelector('#assets');
-          Array.from({ length: 6 }, (_, i) => i + 1).forEach(i => {
-          if (document.getElementById(`point${i}`) == undefined) {
-            const img = document.createElement('img');
-            img.setAttribute('id', `point${i}`);
-            img.setAttribute('src', `imagenes/point${i}.JPG`);
-            assets.appendChild(img);
-          }
-        });
-      });
-
-
-      const hotspots = {
-        point1: document.querySelector('#to-panorama1'),
-        point2: document.querySelector('#to-panorama2'),
-        point3: document.querySelector('#to-panorama3'),
-        point4: document.querySelector('#to-panorama4'),
-        point5: document.querySelector('#to-panorama5'),
-        point6: document.querySelector('#to-panorama6')
-      };
-
-      Object.entries(hotspots).forEach(([key, el]) => {
-        el.classList.add('clickable');
-        el.addEventListener('click', () => changeScene(key));
-      });
-
-      var entrada = false;
-
-      document.querySelector('#btnEntrar').addEventListener('click', () => {
-  const bienvenida = document.querySelector('#bienvenida');
-
-  // Animación de salida
-  bienvenida.setAttribute('animation__fade', {
-    property: 'scale',
-    to: '0 0 0',
-    dur: 500,
-    easing: 'easeInOutCubic'
-  });
-
-  // Desactivar después de animar
-  setTimeout(() => {
-    bienvenida.setAttribute('visible', false);
-    entrada = true;
-  }, 600);
-});
-
-
-      function getPanoramaName(src) {
-        return src.substring(1); //src.split('/').pop().replace('.JPG', '');
-      }
-
-      function changeScene(panorama) {
-        if (!entrada) return;
-
-        const sky = document.querySelector('#sky');
-        sky.setAttribute('src', `#${panorama}`);
-      }
-
-   
-
-      function mostrarHotspots(configs = []) {
-  Object.entries(hotspots).forEach(([key, el]) => {
-    const config = configs.find(cfg => cfg.id === key);
-    const activo = !!config;
-
-    el.setAttribute('visible', activo);
-    el.classList.toggle('clickable', activo);
-
-    if (activo) {
-      if (config.position) {
-        el.setAttribute('position', config.position);
-      }
-      if (config.rotation) {
-        el.setAttribute('rotation', config.rotation);
-      }
-      if (Array.isArray(config.size) && config.size.length === 2) {
-        el.setAttribute('geometry', {
-          width: config.size[0],
-          height: config.size[1]
-        });
-      }
-    }
-  });
-}
-
-function showVideos({ show = [], hide = [] }) {
-  // Mostrar planos y reproducir video
-  show.forEach(id => {
-    const plane = document.getElementById(id);
-    if (!plane) return;
-
-    plane.setAttribute('visible', true);
-    plane.classList.add('clickable');
-
-    const video = videoMap[id];
-   /* if (video) {
-      video.play().catch(err => {
-        console.warn(`No se pudo reproducir el video "${id}":`, err);
-      });
-    }*/
-  });
-
-  // Ocultar planos y pausar video
-  hide.forEach(id => {
-    const plane = document.getElementById(id);
-    if (!plane) return;
-
-    plane.setAttribute('visible', false);
-    plane.classList.remove('clickable');
-
-    const video = videoMap[id];
-    if (video) {
-      video.pause();
-    }
-  });
-}
-
-
-      function onChangeScene() {
-        const sky = document.querySelector('#sky');
-        const src = sky.getAttribute('src');
-        const panorama = getPanoramaName(src);
-
-        switch (panorama) {
-          case 'point1':
-          mostrarHotspots([
-              { id: 'point2', position: '-1 0 -3', rotation: '0 0 0' },
-              { id: 'point3', position: '0 0.1 -2', rotation: '0 0 0' },
-              { id: 'point6', position: '3 0 -5', rotation: '0 -20 0', size: [3,2] }
-            ]);
-            showVideos({
-                hide: ['pantalla1', 'pantalla2']
-            });
-
-            break;
-          case 'point2':
-          mostrarHotspots([
-              { id: 'point1', position: '-1.3 0 2',  rotation:'0 -60 0', size:[1.5,2] },
-              { id: 'point3', position: '0.3 0.1 -0.5', rotation:'0 -50 0', size:[0.4,0.5] },
-         //     { id: 'point4', position: '2 0.1 -4' },
-              { id: 'point6', position: '17 0 -4',  rotation:'0 -70 0', size:[12,8]  }
-            ]);
-            showVideos({
-                hide: ['pantalla1', 'pantalla2']
-            });
-            mostrarEspacioMaker({position:"1 0.3 3", rotation:"0 190 10"});
-      break;
-          case 'point3':
-          mostrarHotspots([
-              { id: 'point1', position: '-1.2 -0.8 8', rotation: '0 -30 0', size:[3.2,2.5]  },
-              { id: 'point2', position: '-0.8 -0.8 1.8', rotation: '0 -30 0', size:[1,1]  },
-              { id: 'point4', position: '0.6 0 -3', rotation: '0 0 0', size:[3,3] },
-              { id: 'point6', position: '9 -0.7 0',rotation: '0 -60 0', size:[5,6] }
-            ]);
-            showVideos({
-                hide: ['pantalla1', 'pantalla2']
-            });
-            mostrarEspacioMaker({position:"1 0 3", rotation:"0 50 0"});
-            break;
-          case 'point4':
-          mostrarHotspots([
-       //       { id: 'point1', position: '1.5 -0.3 6' },
-              { id: 'point2', position: '-0.5 -0.6 3.5', rotation: '0 -10 0', size: [1.5, 1]  },
-              { id: 'point3', position: '0.6 0 2', rotation: '0 -10 0', size: [1.5, 1] },
-              { id: 'point6', position: '15 -2 1.5', rotation: '0 90 0', size: [12, 12] }
-            ]);
-            showVideos({
-                show: ['pantalla1', 'pantalla2']
-            });
-
-            break;
-          case 'point5':
-            mostrarHotspots(['point6']);
-            break;
-          case 'point6':
-          mostrarHotspots([
-            { id: 'point4', position: '3 0.5 2', rotation: '0 70 0', size: [4, 3] },
-              { id: 'point1', position: '1.3 0 -5', rotation: '0 -5 0', size: [2, 3] },
-              { id: 'point2', position: '2 -0.5 -3.5', rotation: '0 0 0', size: [0.8, 1] },
-              { id: 'point3', position: '3 0 -3', rotation: '0 -20 0', size: [1, 2] }
-            ]);
-            showVideos({
-                hide: ['pantalla1', 'pantalla2']
-            });
-           break;
-          default:
-            mostrarHotspots([]);
-        }
-      }
-
-      const sky = document.querySelector('#sky');
-      sky.addEventListener('materialtextureloaded', onChangeScene);
-
-
-    
-
-  function cambiarOpacidadHotspots(valorOpacidad) {
-    Object.values(hotspots).forEach(el => {
-    el.setAttribute('material', {
-        opacity: valorOpacidad,
-        transparent: true
-      });
-    });
-  }
-
-
-// Datos: planes y sus vídeos
-const videoConfig = [
-  { id: 'pantalla1', src: 'video/Video1.mp4' },
-  { id: 'pantalla2', src: 'video/Video2.mp4' }
-];
-
-// Diccionario para asociar plano → video
-const videoMap = {};
-
-videoConfig.forEach(({ id, src }) => {
-  const video = document.createElement('video');
-  video.id = id;
-  video.src = src;
-  video.crossOrigin = 'anonymous';
-  video.loop = true;
-  video.setAttribute('playsinline', '');
-  video.setAttribute('webkit-playsinline', '');
-  video.autoplay = false; // ⛔ no auto, se controla por clic
-
-  // Guardar el video asociado al plano
-  videoMap[id] = video;
-
-  // Asignar video como textura
-  const plane = document.getElementById(id);
-  plane.setAttribute('material', {
-  shader: 'flat',
-  src: video
-});
-
-  // Evento: clic en el plano → play/pause
-  plane.addEventListener('click', () => {
-    if (!plane.getAttribute('visible')) return;
-
-    if (video.paused) {
-      video.play();
-    } else {
-      video.pause();
-    }
-  });
-});
-
-function cargarEntidadDesdeArchivo(url, callback) {
-  fetch(url)
-    .then(response => response.text())
-    .then(html => {
-      const wrapper = document.createElement('div');
-      wrapper.innerHTML = html.trim();
-      const entidad = wrapper.firstElementChild;
-      document.querySelector('a-scene').appendChild(entidad);
-      if (callback) callback(entidad);
-    })
-    .catch(err => console.error(`Error al cargar ${url}:`, err));
-}
-
-function mostrarEspacioMaker({ position, rotation, scale ='1 1 1'} = {}) {
-  return;
-  const panelExistente = document.querySelector('#maker');
-
-if (panelExistente) {
-  // Ya existe: actualizar atributos y mostrarlo
-  panelExistente.setAttribute('position', position);
-  panelExistente.setAttribute('rotation', rotation);
-  panelExistente.setAttribute('scale', scale);
-  panelExistente.setAttribute('visible', true);
-  return;
-}
-
-
-  cargarEntidadDesdeArchivo('escenas/maker.html', (panel) => {
-    panel.setAttribute('position', position);
-    panel.setAttribute('rotation', rotation);
-    panel.setAttribute('rotation', scale);
-
-    const btn = panel.querySelector('#btnPlay');
-    btn.addEventListener('click', () => {
-//      panel.parentNode.removeChild(panel);
-    });
-  });
-}
-  cambiarOpacidadHotspots(0);
-    </script>
   </body>
 </html>

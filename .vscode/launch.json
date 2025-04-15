@@ -1,12 +1,19 @@
 {
     "version": "0.2.0",
     "configurations": [
-      {
-        "type": "chrome",
-        "request": "launch",
-        "name": "Debug A-Frame en Chrome",
-        "url": "http://localhost:5500/index.html",
-        "webRoot": "${workspaceFolder}"
-      }
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}"
+        },
+        {
+            "name": "Debug Live Server en Chrome",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://127.0.0.1:5500",  // o el puerto que use Live Server
+            "webRoot": "${workspaceFolder}"
+          }
     ]
-  }
+}
