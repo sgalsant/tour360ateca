@@ -10,6 +10,7 @@ const videoConfigs = {
         plane: null,   // Se asignará en 'load'
         playIcon: null, // Se asignará en 'load'
         scenes: {
+            point3: { position: '0.865 -0.12 -1.8', rotation: '0 -45 0', width: 0.44, height: 0.27 },
             point4: { position: '1.23 -0.26 -2', rotation: '0 -25 0', width: 1.36, height: 0.8 }
             // Añadir más escenas si es necesario
         }
@@ -22,6 +23,17 @@ const videoConfigs = {
         scenes: {
          //   point3: { position: '-7 -.5 -2', rotation: '0 110 5', width: 2.25, height: 2.25 },
             point4: { position: '-2.55 -0.23 4', rotation: '0 155 0', width: 1.49, height: 0.85 }
+            // Añadir más escenas si es necesario
+        }
+    },
+    pantalla3: {
+        src: 'video/print3d-creality.mp4',
+        element: null,
+        plane: null,
+        playIcon: null,
+        scenes: {
+            point2: { position: '2.3 0.5 3', rotation: '0 200 0', width: 1.49, height: 0.85 },
+            point3: { position: '2.4 0 3', rotation: '0 220 0', width: 1.49, height: 0.85 }
             // Añadir más escenas si es necesario
         }
     }
@@ -81,13 +93,24 @@ window.addEventListener('load', () => {
 
         // Crear el icono de play (a-image)
         const playIcon = document.createElement('a-image');
-        playIcon.setAttribute('class', 'play-icon'); // Mantener clase útil
-        playIcon.setAttribute('src', '#iconoPlay'); // Asegúrate que este ID existe en <a-assets>
-        playIcon.setAttribute('width', '0.5');  // Ajusta el tamaño según necesites
-        playIcon.setAttribute('height', '0.5'); // Ajusta el tamaño según necesites
-        playIcon.setAttribute('position', '0 0 0.01'); // Ligeramente delante del plano
-        playIcon.setAttribute('visible', true); // El icono es visible por defecto cuando el plano lo sea
-        playIcon.classList.add('clickable'); // Hacer el icono clickable
+        playIcon.setAttribute('class', 'play-icon');
+        playIcon.setAttribute('src', '#iconoPlay');
+        playIcon.setAttribute('width', '0.25');
+        playIcon.setAttribute('height', '0.25');
+        playIcon.setAttribute('position', '0 0 0.01');
+        playIcon.setAttribute('visible', true);
+        playIcon.classList.add('clickable');
+
+        // Añadir animación de latido
+        playIcon.setAttribute('animation__pulse', {
+            property: 'scale',
+            from: '1 1 1',
+            to: '1.2 1.2 1',
+            dur: 1500,
+            easing: 'easeInOutSine',
+            loop: true,
+            dir: 'alternate'
+        });
 
         // Añadir icono como hijo del plano
         plane.appendChild(playIcon);
