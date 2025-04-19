@@ -12,6 +12,7 @@
       <a-assets  id="assets">
         <img id="point1" src="imagenes/point1.JPG">  
         <img id="iconoPlay" src="imagenes/play.png">  
+        <a-asset-item id="logo" src="imagenes/logo-ies-ana-luisa-benitez.glb"></a-asset-item>
       </a-assets>
 
       <!-- Cámara con cursor para detectar clics -->
@@ -32,6 +33,11 @@
           position="0 0 0"
           animation="property: opacity; from: 0; to: 0.8; dur: 1000; easing: easeOutQuad">
         </a-plane>
+
+        <a-gltf-model src="#logo" 
+          position="3 .5 -4" rotation="0 90 0" scale="0.02 0.02 0.02"
+          rotator></a-gltf-model>
+
       
         <!-- Texto de bienvenida -->
         <a-text 

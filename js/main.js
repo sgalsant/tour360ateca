@@ -40,6 +40,15 @@ const videoConfigs = {
 };
 
 window.addEventListener('load', () => {
+
+    AFRAME.registerComponent('rotator', {
+        tick: function (time, timeDelta) {
+          const rotation = this.el.getAttribute('rotation');
+          rotation.y += timeDelta * 0.05; // velocidad de rotación
+          this.el.setAttribute('rotation', rotation);
+        }
+      });
+      
     const assets = document.querySelector('#assets');
     [6, 3, 2, 4, 5].forEach(i => {
         if (document.getElementById(`point${i}`) == undefined) {
